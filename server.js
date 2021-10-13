@@ -43,9 +43,7 @@ io.on ('connection', async (socket) => {
     socket.on('newProduct', async (data) => {
         await insertarProducto(data);
         let prod = await lastRow();
-        console.log('last prod',{...prod});
-        console.log('objProductos',objProductos);
-        objProductos.push(prod);
+        objProductos.push({...prod});
         io.sockets.emit('productCatalog', { products: objProductos});
     });
 
