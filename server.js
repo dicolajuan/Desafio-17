@@ -4,7 +4,8 @@ const Archivo = require('./Archivo.js');
 
 const express = require('express');
 const handlebars = require('express-handlebars');
-const { listarProductos, lastRow, insertarProducto, deleteProd } = require('./selectRows.js');
+const { listarProductos, lastRow, insertarProducto, deleteProd } = require('./functionsCRUD-Products.js');
+const { insertarMensaje, lastRowMessage, listarMensajes } = require('./functionsCRUD-Messages.js');
 const app = express();
 const http = require('http').Server(app);
 const io = require('socket.io')(http);
@@ -27,12 +28,6 @@ app.engine(
 app.set('views', './views'); // especifica el directorio de vistas
 app.set('view engine', 'hbs'); // registra el motor de plantillas
 
-let objFile = new Archivo('./mensajes.txt');
-
-const saveMesagge = async (sFile, objMensajes) => {
-    await sFile.saveFile(objMensajes);
-}
-
 http.listen(3030, () => console.log('escuchando desde servidor. Puerto: 3030') )
 
 
@@ -48,14 +43,11 @@ io.on ('connection', async (socket) => {
     });
 
     socket.emit('mensajes', objMensajes);
-    socket.on('nuevo-mensaje', (data)=>{
-        objMensajes.push(data);
+    socket.on('nuevo-mensaje', async (data)=>{
+        await insertarMensaje(data);
+        let mens = await lastRowMessage();
+        objMensajes.push({...mens});
         io.sockets.emit('mensajes', objMensajes);
-        try{
-            saveMesagge(objFile,objMensajes);
-        } catch {
-            console.log('Error al grabar los mensajes');
-        }
     });
 
 });
@@ -65,7 +57,10 @@ app.get('/', async (req,res)=>{
     productos.forEach(prod => {
         objProductos.push({...prod})    
     });
-    //objProductos.push({...productos});
+    let mensajes = await listarMensajes();
+    mensajes.forEach(mens => {
+        objMensajes.push({...mens})    
+    });
     res.render('products', { products: objProductos })
 });
 

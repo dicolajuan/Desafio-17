@@ -48,7 +48,7 @@ let render = (data) => {
     let html = data.map((e,i)=>`
         <div>
             <strong class="bluetext">${e.autor}</strong>
-            <span class="browntext">[${e.date}]: </span>
+            <span class="browntext">[${e.fecha}]: </span>
             <em class="greentext">${e.texto}</em>
         </div>
     `).join(' ');
@@ -56,13 +56,14 @@ let render = (data) => {
 }
 
 function enviarMensaje(e){
-    let date = new Date();
-    date = date.toLocaleString('es-AR');
+    let fecha = new Date();
+    fecha = fecha.toLocaleString('es-AR');
     let envio = {
         autor: document.getElementById('usuario').value,
         texto: document.getElementById('texto').value,
-        date: date,
+        fecha: fecha,
     }
+    console.log(envio);
     document.getElementById('usuario').disabled = true;
     texto: document.getElementById('texto').value = '';
     socket.emit('nuevo-mensaje', envio);
