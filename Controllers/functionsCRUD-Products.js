@@ -1,4 +1,4 @@
-const {options} = require('./optionsDB');
+const {options} = require('../Database/optionsDB');
 const knex = require('knex')(options);
 
 const listarProductos = async () => {

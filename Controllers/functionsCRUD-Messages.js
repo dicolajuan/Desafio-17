@@ -1,4 +1,4 @@
-const {options} = require('./SQLite3');
+const {options} = require('../Database/SQLite3');
 const knex = require('knex')(options);
 
 const iniciarTabla = async () => {

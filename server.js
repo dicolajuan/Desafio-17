@@ -1,11 +1,9 @@
 //import { Archivo } from './Archivo.js';
 
-const Archivo = require('./Archivo.js');
-
 const express = require('express');
 const handlebars = require('express-handlebars');
-const { listarProductos, lastRow, insertarProducto, deleteProd } = require('./functionsCRUD-Products.js');
-const { insertarMensaje, lastRowMessage, listarMensajes } = require('./functionsCRUD-Messages.js');
+const { listarProductos, lastRow, insertarProducto, deleteProd } = require('./Controllers/functionsCRUD-Products.js');
+const { insertarMensaje, lastRowMessage, listarMensajes } = require('./Controllers/functionsCRUD-Messages.js');
 const app = express();
 const http = require('http').Server(app);
 const io = require('socket.io')(http);
