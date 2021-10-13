@@ -30,17 +30,15 @@ app.set('view engine', 'hbs'); // registra el motor de plantillas
 
 http.listen(3030, async () => {
     let productos = await listarProductos();
-    //objProductos.splice(0, objProductos.length);
     productos.forEach(prod => {
         objProductos.push({...prod})    
     });
 
     let mensajes = await listarMensajes();
-    //objMensajes.splice(0, objMensajes.length);
     mensajes.forEach(mens => {
         objMensajes.push({...mens})    
     });
-    
+
     console.log('escuchando desde servidor. Puerto: 3030')} )
 
 
@@ -67,9 +65,4 @@ io.on ('connection', async (socket) => {
 
 app.get('/', async (req,res)=>{
     res.render('products', { products: objProductos })
-});
-
-app.get('/listar', async (req,res)=>{
-    let productos = await listarProductos();
-    res.json({ products: productos });
 });
