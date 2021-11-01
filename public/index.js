@@ -3,6 +3,7 @@ const socket = io();
 socket.on('productCatalog', (data) => renderprods(data));
 
 let renderprods = (data) => {
+    console.log(data);
     if (data.products.length > 0) {
         let table =`
         <table>

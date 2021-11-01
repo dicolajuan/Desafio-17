@@ -3,12 +3,14 @@
 const express = require('express');
 const handlebars = require('express-handlebars');
 const { insertDocuments, readDocuments } = require('./Controllers/functionsCRUD-Mongo.js');
+const { getProduct, generarProductos } = require('./generadorProductos.js');
 const app = express();
 const http = require('http').Server(app);
 const io = require('socket.io')(http);
 
 const objProductos = [];
 const objMensajes = [];
+const objProductosFaker = [];
 
 app.use(express.static('./public'));
 
@@ -28,10 +30,14 @@ app.set('view engine', 'hbs'); // registra el motor de plantillas
 http.listen(3030, async () => {
     
 
-    let productosMongo = await readDocuments('producto');
-    productosMongo.forEach(prod => {
-        objProductos.push(prod);
-    });
+    // let productosMongo = await readDocuments('producto');
+    // productosMongo.forEach(prod => {
+    //     objProductos.push(prod);
+    // });
+
+    // for(let i=0;i < 10;i++){
+    //     objProductos.push(getProduct());
+    // };
 
     let mensajesMongo = await readDocuments('mensajes');
     mensajesMongo.forEach(mens => {
@@ -60,6 +66,19 @@ io.on ('connection', async (socket) => {
 
 });
 
-app.get('/', async (req,res)=>{
-    res.render('products', { products: objProductos })
+app.get('/:cant?', async (req,res)=>{
+    let cant = req.query.cant || 10;
+    for(let i=0;i < cant;i++){
+        objProductos.push(getProduct());
+    };
+    res.render('products-Faker', { products: objProductos })
+});
+
+app.get('/productos/:cant', async (req,res)=>{
+    //const {cant} = req.params;
+    for(let i=0;i < req.params.cant;i++){
+        objProductos.push(getProduct());
+    };
+    //console.log(objProductosFaker);
+    res.render('products-Faker', { products: objProductos });
 });
